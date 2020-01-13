@@ -17,7 +17,7 @@
 步骤：
 
 ```bash
-npm    i    -g    vue-cli
+npm    i    -g    @vue/cli
 ```
 
 ---
@@ -45,9 +45,13 @@ npm    i    -g    vue-cli
 
 具体步骤：
 
-1.  ```bash
-    code    ~/.vuerc
-    ```
+1.  用文本编辑器，例如 VSCode，打开 `~/.vuerc`。
+
+    > 可以借助命令行方便的做到，如下：
+    >
+    > ```bash
+    > code    ~/.vuerc
+    > ````
 
 
 2.  在`~/.vuerc` 中填入下列内容：
@@ -153,7 +157,32 @@ npm    i    -g    vue-cli
 ---
 
 
-### 安装吴乐川的 MarkDown 文件处理工具
+### 全局安装一些的辅助工具
+
+#### 全局安装 `mkdirp`
+
+> 由于 `@vue/cli` 恰巧包含了 `mkdirp`，故此步骤并非必须。
+
+```bash
+npm    i    -g    mkdirp
+```
+
+---
+
+
+#### 全局安装 `rimraf`
+
+> 由于 `@vue/cli` 恰巧包含了 `rimraf`，故此步骤并非必须。
+
+```bash
+npm    i    -g    rimraf
+```
+
+
+---
+
+
+#### 全局安装吴乐川的 MarkDown 文件处理工具
 
 该项工作的目的是安装一个工具，用于日后将 MarkDown 文件（`.md`）自动批量转换成对应的 HTML 网页文件(`.html`)。**HTML 网页版本的文档更便于查阅或分发。**
 
@@ -170,6 +199,14 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
 
 ---
+
+
+
+
+
+
+
+
 
 
 ## 日常创建 Vuejs 项目并对其进行自定义配置
@@ -392,10 +429,16 @@ Vue-CLI 工具自动创建出来的《`HelloWorld.vue`》文件中，其样式�
 
 #### 为项目添加与文档编撰相关的功能
 
-1.  在《`package.json`》文件中的 `scripts` 配置项，添加以下条目：
+> 注意，为了使得该功能彻底自动化并且通用于 Windows 系统、Linux 家族习题以及 macOS 系统，应该先行安装 `rimraf` 这个 npm 包。见上文《[全局安装 `rimraf`](#全局安装-rimraf)》一节。
+
+
+##### 配置步骤
+
+1.  在《`package.json`》文件中的 `scripts` 配置项，添加以下两则条目：
 
     ```json
-    "generate-html-docs": "rm -f ./Read*.html & find ./documents -type f -name '*.html' -delete    &&    wlc-md-to-html  -i ./*.md,./documents/**/*.md  -e  -E3  -C ./documents/wlc-md-to-html.config.js  --to '*'"
+    "remove-all-html-docs": "rimraf  ./readme.html  ./documents/**/*.html",
+    "generate-html-docs": "npm  run  remove-all-html-docs    &&    wlc-md-to-html  -i ./*.md,./documents/**/*.md  -e  -E3  -C ./documents/wlc-md-to-html.config.js  --to '*'",
     ```
 
 1.  在项目根文件夹内创建新的文件夹，名为 `documents`。
@@ -441,6 +484,13 @@ Vue-CLI 工具自动创建出来的《`HelloWorld.vue`》文件中，其样式�
     ```
 
     </details>
+
+
+##### 日常使用步骤
+
+```bash
+npm    run    generate-html-docs
+```
 
 
 ---
@@ -609,14 +659,25 @@ npm    run    generate-html-docs
 
 #### 添加用于查阅 webpack 最终配置的 npm “`scripts`” 条目
 
+> 注意，为了使得该功能彻底自动化并且通用于 Windows 系统、Linux 家族习题以及 macOS 系统，应该先行安装 `mkdirp` 这个 npm 包。见上文《[全局安装 `mkdirp`](#全局安装-mkdirp)》一节。
 
+##### 配置步骤
 
-1.  在《`package.josn`》文件中，添加一个**用于查阅 webpack 最终配置**的脚本（`scripts`）条目。如下：
+具体做法如下：在《`package.josn`》文件中，添加一个**用于查阅 webpack 最终配置**的脚本（`scripts`）条目。如下：
 
-    ```json
-    "inspect-webpack-config": "echo /* eslint-disable */ var shit = > ./temp/shit-webpack.js    &&    vue inspect >> ./temp/shit-webpack.js"
+```json
+"inspect-webpack-config": "mkdirp  temp    &&    echo /* eslint-disable */ var shitWebpackConfig =  >  ./temp/shit-webpack.config.js    &&    vue  inspect  >>  ./temp/shit-webpack.config.js"
+```
+
+##### 日常使用步骤
+
+1.  在命令行环境执行：
+
+    ```bash
+    npm    run    inspect-webpack-config
     ```
 
+2.  打开 `temp/shit-webpack.config.js`。
 
 ---
 
