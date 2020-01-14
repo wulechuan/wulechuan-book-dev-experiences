@@ -102,6 +102,7 @@ npm    i    -g    @vue/cli
                                 "component": "never"
                             }
                         }],
+                        "no-multi-spaces": 0,
                         "no-trailing-spaces": ["error", {
                             "skipBlankLines": false,
                             "ignoreComments": false
