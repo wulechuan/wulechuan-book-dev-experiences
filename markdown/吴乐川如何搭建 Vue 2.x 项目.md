@@ -243,7 +243,7 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 1.  将 `<noscript>` 标签中的文字替换为：
 
     ```html
-    你的浏览器禁用了或者根本不支持 JavaScript，因此无法运行《你的项目名称》前端应用程序。
+    你的浏览器禁用了 JavaScript，或者因为太过老旧而根本不支持 JavaScript。因此，在该浏览器中无法运行《你的项目名称》前端应用程序。
     ```
 
 综上，你将得到的《`index.html`》文件将类似如下范本：
@@ -264,7 +264,7 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
     <body>
         <noscript>
             <!-- 注意，下一行修订了。 -->
-            <strong>你的浏览器禁用了或者根本不支持 JavaScript，因此无法运行《你的项目名称》前端应用程序。</strong>
+            <strong>你的浏览器禁用了 JavaScript，或者因为太过老旧而根本不支持 JavaScript。因此，在该浏览器中无法运行《你的项目名称》前端应用程序。</strong>
         </noscript>
         <div id="app"></div>
         <!-- built files will be auto injected -->
