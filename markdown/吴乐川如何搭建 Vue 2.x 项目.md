@@ -8,9 +8,9 @@
 
 > 如果一台电脑上有多个账号，且都需要各自独立创建 Vue 项目。则下述步骤须为每个账号各执行一次。
 
-### 安装 `vue-cli`
+### 安装 `@vue/cli`
 
-一般的，对于创建和管理采用 Vue 2.x 的项目，应安装 `vue-cli` 3.x 版本。
+一般的，对于创建和管理采用 Vue 2.x 的项目，应安装 `@vue/cli` 3.x 版本。
 
 > [Vue-CLI](https://cli.vuejs.org/zh/) 是 Vuejs 官方出品的、与 Vue 配套使用的命令行工具，用于创建和管理 Vue 项目。它强大且方便，如今还配备了直观、易用的**网页式图形用户界面**，以至于其名称中的 “`cli`” 一词已经不那么贴切了。
 
@@ -212,6 +212,8 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
 ## 日常创建 Vuejs 项目并对其进行自定义配置
 
+以下步骤，须为**每一个**单独的 Vuejs 项目各自（分别）执行。
+
 ### 创建 Vuejs 2.x 项目
 
 1.  创建项目。可以采取以下两种方法之**任一**：
@@ -282,7 +284,7 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
 ### 对项目进行迎合吴乐川个人偏好的配置
 
-#### 令所有 `.vue` 文件自动加载公共样式
+#### 令 `App.vue` 文件加载公共样式
 
 我们会设计一些公共的、跨组件的 CSS 样式。这些样式书写在单独的 `.css` 文件（或者 `.less` 、 `.sass`、`.scss`、 `.styl`）中。依据 Vue 项目的默认配置，这些单独的文件不会被 webpack 加载并组合、编译，更不会存放到 `dist` 文件中。我们须手工添加额外的配置，使得 webpack 在构建项目时也包含这些单独的样式文件。
 
@@ -300,91 +302,120 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
     ```
 
 
-2.  修改 Vue 项目的根文件夹内的 `vue.config.js` 的内容，使之进一步自动修订 webpack
-    选项。最终目的是，令 webpack 在打包时全自动的“隐式”（或者说”暗中“）为所有 `.vue`
-    文件自动引入独立的 `styl` 文件，从而使得所有 `.vue` 都可以使用由该 `.styl`
-    文件所导入的所谓“公共的”样式。
+1.  通过特定的配置以加载一些单独存放（即，不存放在 `.vue` 文件中）的 CSS 规则。
 
-    一个修订好的、完整的《`vue.config.js`》范本如下：
+    **但实际上下面的做法已经证实是不佳的做法。因此作废。** 可展开阅读细节，**但切勿采纳之。**
 
     <details>
-    <summary>《<code>vue.config.js</code>》完整范文</summary>
+    <summary>不佳做法的细节</summary>
 
-    > 顺便指出：该范文额外携带了 `disableAllCSSModules` 函数并调用了该函数。顾名思义，该函数之功能是强制禁止模块化样式定义（即 `CSS Module是`）之功能。但实际上，该功能不必强行禁止，因为任何 `.vue` 文件中，凡不配备 `module` 字样的 `<style>` 标签，都不会被视作 `CSS Module`。因此，下方范文中 `disableAllCSSModules` 的函数定义和函数调用均可删除。
+    原始的（**错误的**）做法：
 
-    ```js
-        const path = require('path')
-    module.exports = {
-        lintOnSave: false,
-
-        chainWebpack: config => {
-            const chainableModule = config.module
-            implicitlyInjectSharedStylusIntoAllVueModules(chainableModule)
-            disableAllCSSModules(chainableModule) // 该行可删除。
-        },
-    }
-
-    function disableAllCSSModules(chainableModule) { // 该定义可完全删除。
-        // rule(...)
-        const ruleTypes = ['css', 'postcss', 'scss', 'sass', 'less', 'stylus']
-
-        // oneOf(...)
-        const vueModuleTypes = ['vue-modules', 'vue', 'normal-modules', 'normal']
-
-        // use(...)
-        const loaderTypes = ['css-loader']
-
-        ruleTypes.forEach(ruleType => {
-            vueModuleTypes.forEach(moduleType => {
-                loaderTypes.forEach(loaderType => {
-                    chainableModule.rule(ruleType).oneOf(moduleType).use(loaderType).options({
-                        modules: false,
-                    })
-                })
-            })
-        })
-    }
-
-    function implicitlyInjectSharedStylusIntoAllVueModules(chainableModule) {
-        // https://cli.vuejs.org/zh/guide/css.html#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%AF%BC%E5%85%A5
-
-        // oneOf(...)
-        const vueModuleTypes = ['vue-modules', 'vue', 'normal-modules', 'normal']
-
-        const stylusRule = chainableModule.rule('stylus')
-        vueModuleTypes.forEach(moduleType => {
-            stylusRule.oneOf(moduleType)
-                .use('style-resource')
-                .loader('style-resources-loader')
-                .options({
-                    patterns: [
-                        path.resolve(__dirname, './src/styles/javascript-auto-import.styl'),
-                    ],
-                })
-        })
-    }
-    ```
+    ~~修改 Vue 项目的根文件夹内的 `vue.config.js` 的内容，使之进一步自动修订 webpack
+    选项。最终目的是，令 webpack 在打包时全自动的“隐式”（或者说”暗中“）为所有 `.vue`
+    文件自动引入独立的 `styl` 文件，从而使得所有 `.vue` 都可以使用由该 `.styl`
+    文件所导入的所谓“公共的”样式。~~
 
     </details>
 
+    **上述错误做法带来的问题**：
 
+    每个组件引入的这些公共的样式定义，是重复的！例如，有 10 个组件引入这些 CSS 规则，那么这些规则就在最终打包的 .css 文件中出现 10 次。
 
+    **正确的做法**：
 
-
-
-    如果不想进行上述对《`vue.config.js`》的改动，即不想令所有 `.vue`
-    文件自动隐式（或者说暗中）引用公共样式文件，但在某个或某些特定的 `.vue`
-    文件中又确实需要使用这类样式文件，则可在这个或这些 `.vue` 文件中的
-    `<script>` 标签中，手工明确书写类似这样的语句：
+    在 `App.vue` 这一文件中的 `<script>`  标签中，手工明确书写类似这样的语句：
 
     ```js
     import '@/styles/index.styl'
     ```
 
-    > 千万注意！不是在 `<style lang="stylus">` 标签中书写
-    > CSS 的 `@import` 语句，而是在 `<script>` 标签中书写
-    > JavaScript 的 `import` 语句。并且，恰因为书写的是 JavaScript
-    > 而不是 CSS，`import` 一词之前是**不冠以** `@` 的。
+    > 千万注意！
+    >
+    > 1. **不是**在 `<style lang="stylus">` 标签中书写CSS 的 `@import`
+    > 语句，**而是**在 `<script>` 标签中书写 JavaScript 的 `import`
+    > 语句。并且，恰因为书写的是 JavaScript 而不是 CSS，`import` 一词之前是**不冠以** `@` 的。
+    >
+    > 2. 修订的不是错误做法中提及的 `vue.config.js` 文件，而是正确做法中提及的 `App.vue` 这一文件。
+
+
+
+
+1.  强行禁止模块化样式定义（即 `CSS Module`）之功能。
+
+    > 但实际上，该功能不必强行禁止，因为任何 `.vue` 文件中，凡不配备 `module`  字样的 `<style>` 标签，都不会被视作 `CSS Module`。因此，下方范文中 `disableAllCSSModules` 的函数定义和函数调用均可删除。
+
+
+
+一个修订好的、完整的《`vue.config.js`》范本如下：
+
+<details>
+<summary>《<code>vue.config.js</code>》完整范文</summary>
+
+```js
+const path = require('path')
+module.exports = {
+    lintOnSave: false,
+
+    chainWebpack: config => {
+        const chainableModule = config.module
+
+
+        // 下面这行作废！因为下面是错误的做法！
+        implicitlyInjectSharedStylusIntoAllVueModules(chainableModule)
+
+
+        disableAllCSSModules(chainableModule) // 该行之功能并非必须，因此该行可删除。
+    },
+}
+
+function disableAllCSSModules(chainableModule) { // 该定义并非必须，因此可完全删除。
+    // rule(...)
+    const ruleTypes = ['css', 'postcss', 'scss', 'sass', 'less', 'stylus']
+
+    // oneOf(...)
+    const vueModuleTypes = ['vue-modules', 'vue', 'normal-modules', 'normal']
+
+    // use(...)
+    const loaderTypes = ['css-loader']
+
+    ruleTypes.forEach(ruleType => {
+        vueModuleTypes.forEach(moduleType => {
+            loaderTypes.forEach(loaderType => {
+                chainableModule.rule(ruleType).oneOf(moduleType).use(loaderType).options({
+                    modules: false,
+                })
+            })
+        })
+    })
+}
+
+function implicitlyInjectSharedStylusIntoAllVueModules(chainableModule) {
+    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+
+    // https://cli.vuejs.org/zh/guide/css.html#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%AF%BC%E5%85%A5
+
+    // oneOf(...)
+    const vueModuleTypes = ['vue-modules', 'vue', 'normal-modules', 'normal']
+
+    const stylusRule = chainableModule.rule('stylus')
+    vueModuleTypes.forEach(moduleType => {
+        stylusRule.oneOf(moduleType)
+            .use('style-resource')
+            .loader('style-resources-loader')
+            .options({
+                patterns: [
+                    path.resolve(__dirname, './src/styles/javascript-auto-import.styl'),
+                ],
+            })
+    })
+}
+```
+
+</details>
+
 
 
 ---
@@ -417,9 +448,15 @@ Vue-CLI 工具自动创建出来的《`HelloWorld.vue`》文件中，其样式�
 
 2.  你虽然理解“scoped CSS”，但很确信该项目不需要使用这样的功能。
 
-3.  你在没有对项目的 webpack 配置（实则经由《`vue.config.js`》间接配置 webpack）进行深入修订，同时，又参照了上文《[令所有 `.vue` 文件自动加载公共样式](#令所有-.vue-文件自动加载公共样式)》一节中，在每个 `.vue` 文件中“暗中”加载位于单独样式文件中的公共样式。
+3.  你在没有对项目的 webpack 配置（实则经由《`vue.config.js`》间接配置 webpack）进行深入修订，同时，又参照了上文《[令所有 `.vue` 文件自动加载公共样式](#令-App.vue-文件加载公共样式)》一节中，在每个 `.vue` 文件中“暗中”加载位于单独样式文件中的公共样式。
 
-    原因是，当你对 webpack 的配置修订较为简单、潦草、为切中要害时，暗中加载的公共样式也会被编译成“scoped”的形式。而这些公共样式是不对应到具体的组件的，因而不对应到任何 vue 能预知的 DOM 元素上。换句话说，一些“普通”的 DOM 元素，例如 `<html>` 或 `<button>` 等，并不会被 webpack 添加针对 scoped CSS 的额外标记。**简单的说，“_暗中加载公共样式_”外加“_某个组件采用的 scoped CSS_”这样的配置组合，将使得这些公共样式彻底失效！**
+    原因是，当你对 webpack 的配置修订较为简单、潦草、未切中要害时，在 `App.vue` 中加载的公共样式也会被编译成“scoped”的形式。而这些公共样式是不对应到具体的组件的，因而不对应到任何 vue 能预知的 DOM 元素上。换句话说，一些“普通”的 DOM 元素，例如 `<html>` 或 `<button>` 等，并不会被 webpack 添加针对 scoped CSS 的额外标记。
+
+    简单的说，以下两种做法的组合将使得被加载的公共样式彻底失效！
+
+    1.  在 `App.vue` 中加载公共样式
+    1.  某个组件中采用带有 scoped 的 CSS
+
 
     > 具体怎样才算是对 webpack 配置做更“精细”的修订，从而使公共样式不受某个 `.vue` 组件的“`<style scoped>`”的干扰呢？
     >
