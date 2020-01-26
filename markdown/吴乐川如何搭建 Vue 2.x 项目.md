@@ -284,7 +284,7 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
 ### 对项目进行迎合吴乐川个人偏好的配置
 
-#### 令 `App.vue` 文件加载公共样式
+#### 令 `main.ts` 文件加载公共样式
 
 我们会设计一些公共的、跨组件的 CSS 样式。这些样式书写在单独的 `.css` 文件（或者 `.less` 、 `.sass`、`.scss`、 `.styl`）中。依据 Vue 项目的默认配置，这些单独的文件不会被 webpack 加载并组合、编译，更不会存放到 `dist` 文件中。我们须手工添加额外的配置，使得 webpack 在构建项目时也包含这些单独的样式文件。
 
@@ -324,7 +324,7 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
     **正确的做法**：
 
-    在 `App.vue` 这一文件中的 `<script>`  标签中，手工明确书写类似这样的语句：
+    在 `main.ts` 这一文件中，手工明确书写类似这样的语句：
 
     ```js
     import '@/styles/index.styl'
@@ -336,14 +336,14 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
     > 语句，**而是**在 `<script>` 标签中书写 JavaScript 的 `import`
     > 语句。并且，恰因为书写的是 JavaScript 而不是 CSS，`import` 一词之前是**不冠以** `@` 的。
     >
-    > 2. 修订的不是错误做法中提及的 `vue.config.js` 文件，而是正确做法中提及的 `App.vue` 这一文件。
+    > 2. 应修订的文件，不是错误做法中提及的 `vue.config.js`，而是正确做法中提及的 `main.ts`。
 
 
 
 
 1.  强行禁止模块化样式定义（即 `CSS Module`）之功能。
 
-    > 但实际上，该功能不必强行禁止，因为任何 `.vue` 文件中，凡不配备 `module`  字样的 `<style>` 标签，都不会被视作 `CSS Module`。因此，下方范文中 `disableAllCSSModules` 的函数定义和函数调用均可删除。
+    > 但实际上，该功能不必强行禁止，因为任何 `.vue` 文件中，凡不配备 `module`  字样的 `<style>` 标签，都**不会**被视作 `CSS Module`。因此，下方范文中 `disableAllCSSModules` 的函数定义和函数调用均可删除。
 
 
 
@@ -361,7 +361,11 @@ module.exports = {
         const chainableModule = config.module
 
 
-        // 下面这行作废！因为下面是错误的做法！
+        /*
+            下面这行作废！因为下面是错误的做法！
+            下面这行作废！因为下面是错误的做法！
+            下面这行作废！因为下面是错误的做法！
+        */
         implicitlyInjectSharedStylusIntoAllVueModules(chainableModule)
 
 
@@ -391,9 +395,11 @@ function disableAllCSSModules(chainableModule) { // 该定义并非必须，�
 }
 
 function implicitlyInjectSharedStylusIntoAllVueModules(chainableModule) {
-    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
-    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
-    // 这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+    /*
+        这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+        这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+        这个函数实现的功能是一种不佳的做法。该函数已经废弃！
+    */
 
     // https://cli.vuejs.org/zh/guide/css.html#%E8%87%AA%E5%8A%A8%E5%8C%96%E5%AF%BC%E5%85%A5
 
@@ -448,17 +454,17 @@ Vue-CLI 工具自动创建出来的《`HelloWorld.vue`》文件中，其样式�
 
 2.  你虽然理解“scoped CSS”，但很确信该项目不需要使用这样的功能。
 
-3.  你在没有对项目的 webpack 配置（实则经由《`vue.config.js`》间接配置 webpack）进行深入修订，同时，又参照了上文《[令所有 `.vue` 文件自动加载公共样式](#令-App.vue-文件加载公共样式)》一节中，在每个 `.vue` 文件中“暗中”加载位于单独样式文件中的公共样式。
+3.  你在没有对项目的 webpack 配置进行深入修订（需指出，实则是没有经由《`vue.config.js`》间接配置 webpack），同时，又参照了上文《[令 `main.ts` 文件加载公共样式](#令-main.ts-文件加载公共样式)》一节中，在每个 `main.ts` 文件中加载了位于单独样式文件中的公共样式。
 
-    原因是，当你对 webpack 的配置修订较为简单、潦草、未切中要害时，在 `App.vue` 中加载的公共样式也会被编译成“scoped”的形式。而这些公共样式是不对应到具体的组件的，因而不对应到任何 vue 能预知的 DOM 元素上。换句话说，一些“普通”的 DOM 元素，例如 `<html>` 或 `<button>` 等，并不会被 webpack 添加针对 scoped CSS 的额外标记。
+    这种情况下应该禁用组件化样式的原因是，当你对 webpack 的配置修订较为简单、潦草、未切中要害时，在 `main.ts` 中加载的公共样式也会被编译成“scoped”的形式。而这些公共样式是不对应到具体的组件的，因而不对应到任何 vue 能预知的 DOM 元素上。换句话说，一些“普通”的 DOM 元素，例如 `<html>` 或 `<button>` 等，并不会被 webpack 添加针对 scoped CSS 的额外标记。
 
-    简单的说，以下两种做法的组合将使得被加载的公共样式彻底失效！
+    简单的说，以下两种做法的组合**将使得被加载的公共样式彻底失效**！
 
-    1.  在 `App.vue` 中加载公共样式
+    1.  在 `main.ts` 中加载公共样式
     1.  某个组件中采用带有 scoped 的 CSS
 
 
-    > 具体怎样才算是对 webpack 配置做更“精细”的修订，从而使公共样式不受某个 `.vue` 组件的“`<style scoped>`”的干扰呢？
+    > 具体怎样才算是对 webpack 配置做更“精细”的修订，从而使公共样式不受某个 `.vue` 组件中的“`<style scoped>`”的干扰呢？
     >
     > 很遗憾，我暂时没有空研究整理出可行的方案。**须待日后补充。**
 
