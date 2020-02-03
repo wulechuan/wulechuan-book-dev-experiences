@@ -294,17 +294,9 @@ npm    i    -g    @wulechuan/markdown-to-html-via-cli
 
 > 此处我们以 `stylus` 语言为例。
 
-
-1.  安装 `style-resouces-loader` 包。
-
-    ```bash
-    npm    i    -D    style-resources-loader
-    ```
-
-
 1.  通过特定的配置以加载一些单独存放（即，不存放在 `.vue` 文件中）的 CSS 规则。
 
-    **但实际上下面的做法已经证实是不佳的做法。因此作废。** 可展开阅读细节，**但切勿采纳之。**
+    为达到上述目的我曾采用过下面做法，**但实际上该做法已经证实是不佳的做法。因此作废。** 可展开阅读细节，**但切勿采纳之。** 另，下文有更好的方式达到上述目的。
 
     <details>
     <summary>不佳做法的细节</summary>
