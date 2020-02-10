@@ -111,10 +111,10 @@ npm    i    -g    @vue/cli
                         "no-param-reassign": 0,
                         "quotes": ["error", "single"],
                         "semi": ["error", "never"],
-                        "max-statements": [0, 32],
+                        "max-statements": [0, 64],
                         "multiline-ternary": ["error", "always-multiline"],
                         "new-parens": [1],
-                        "yoda": ["error", "never"],
+                        "yoda": [0],
                         "comma-dangle": ["error", {
                             "arrays": "always-multiline",
                             "objects": "always-multiline",
