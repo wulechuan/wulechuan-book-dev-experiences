@@ -5,5 +5,11 @@
         ".markdownlint*": true,
         ".gitignore": true,
         "wlc-md-to-html.config.js": true,
+        "PowerShell-Tools": true,
+        "bash-tools": true,
+        "package-lock.json": true,
+        "package.json": true,
+        "git-push-to-all-origins.sh": true,
+        ".ps-git-push-to-all-origins.ps1": true,
     }
 }

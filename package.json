@@ -6,8 +6,8 @@
     "private": true,
     "description": "",
     "scripts": {
-        "remove-all-html-docs": "rimraf  ./ReadMe.html  ./documents/**/*.html",
-        "generate-html-docs": "npm  run  remove-all-html-docs    &&    wlc-md-to-html  -i ./*.md,./documents/**/*.md  -E3  -C ./wlc-md-to-html.config.js  --to '*'",
+        "remove-all-html-docs": "rimraf  ./ReadMe.html  ./documents/html/**/*.html",
+        "generate-html-docs": "npm  run  remove-all-html-docs    &&    wlc-md-to-html  -i ./*.md,./documents/markdown/**/*.md  -E3  -C ./wlc-md-to-html.config.js  --to 'documents/html'",
         "start": "npm  run  generate-html-docs"
     },
     "devDependencies": {
